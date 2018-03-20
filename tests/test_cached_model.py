@@ -10,12 +10,23 @@ from cached_sklearn.model import create_cached_model
 from sklearn.svm import SVC
 from sklearn.base import clone
 import numpy as np
+from sklearn.ensemble import GradientBoostingClassifier
 import datetime
 
 class TestCachedModel(unittest.TestCase):
 
     def test_model(self):
-        svc = SVC(C=10)
+        Model = SVC
+        kwargs = {'C': 10}
+        self._sub_test(Model, kwargs)
+
+        Model = GradientBoostingClassifier
+        kwargs = {'learning_rate': 0.1}
+        self._sub_test(Model, kwargs)
+
+    def _sub_test(self, Model, kwargs):
+        svc = Model(**kwargs)
+
         nsamples = 5000
         nfeatures = 5
         np.random.seed(0)
@@ -24,17 +35,17 @@ class TestCachedModel(unittest.TestCase):
         start_time = datetime.datetime.now()
         svc.fit(X, y)
         delta_time = datetime.datetime.now() - start_time
-        print("fit using %d seconds." % delta_time.seconds) ## roughly 9 seconds
+        print("fit using %d seconds." % delta_time.seconds) ## roughly more than 1 seconds
         y_pred = svc.predict(X)
 
-        cached_svc1 = create_cached_model(SVC, C=10)
+        cached_svc1 = create_cached_model(Model, **kwargs)
         start_time = datetime.datetime.now()
         cached_svc1.fit(X, y)
         delta_time = datetime.datetime.now() - start_time
-        print("fit using %d seconds." % delta_time.seconds) ## roughly 9 seconds
+        print("fit using %d seconds." % delta_time.seconds) ## roughly more than 1 seconds
         cached_y_pred1 = cached_svc1.predict(X)
 
-        cached_svc2 = create_cached_model(SVC, C=10)
+        cached_svc2 = create_cached_model(Model, **kwargs)
         start_time = datetime.datetime.now()
         cached_svc2.fit(X, y)
         delta_time = datetime.datetime.now() - start_time

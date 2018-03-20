@@ -31,6 +31,7 @@ def get_np_arrays_hash(arrays):
             Xy_hash += str(hash(array_del.data))
             del array_del
     Xy_hash = hash(Xy_hash)
+    return Xy_hash
 
 def create_cached_model(Model, **kwargs):
     class CachedModel(Model):
