@@ -25,7 +25,7 @@ class TestCachedModel(unittest.TestCase):
         self._sub_test(Model, kwargs)
 
     def _sub_test(self, Model, kwargs):
-        svc = Model(**kwargs)
+        clf = Model(**kwargs)
 
         nsamples = 5000
         nfeatures = 5
@@ -33,12 +33,17 @@ class TestCachedModel(unittest.TestCase):
         X = np.random.sample(size=(nsamples, nfeatures))
         y = np.random.randint(2, size=nsamples)
         start_time = datetime.datetime.now()
-        svc.fit(X, y)
+        clf.fit(X, y)
         delta_time = datetime.datetime.now() - start_time
         print("fit using %d seconds." % delta_time.seconds) ## roughly more than 1 seconds
-        y_pred = svc.predict(X)
+        y_pred = clf.predict(X)
 
         cached_svc1 = create_cached_model(Model, **kwargs)
+        if len(kwargs.keys()) > 0:
+            cached_svc1_params = cached_svc1.get_params()
+            param_key = kwargs.keys()[0]
+            self.assertTrue(cached_svc1_params[param_key] == kwargs[param_key])
+
         start_time = datetime.datetime.now()
         cached_svc1.fit(X, y)
         delta_time = datetime.datetime.now() - start_time
