@@ -16,10 +16,6 @@ import datetime
 class TestCachedModel(unittest.TestCase):
 
     def test_model(self):
-        Model = SVC
-        kwargs = {'C': 10}
-        self._sub_test(Model, kwargs)
-
         Model = GradientBoostingClassifier
         kwargs = {'learning_rate': 0.1}
         self._sub_test(Model, kwargs)
@@ -37,6 +33,7 @@ class TestCachedModel(unittest.TestCase):
         delta_time = datetime.datetime.now() - start_time
         print("fit using %d seconds." % delta_time.seconds) ## roughly more than 1 seconds
         y_pred = clf.predict(X)
+        y_pred_proba = clf.predict_proba(X)
 
         cached_svc1 = create_cached_model(Model, **kwargs)
         if len(kwargs.keys()) > 0:
@@ -49,6 +46,7 @@ class TestCachedModel(unittest.TestCase):
         delta_time = datetime.datetime.now() - start_time
         print("fit using %d seconds." % delta_time.seconds) ## roughly more than 1 seconds
         cached_y_pred1 = cached_svc1.predict(X)
+        cached_y_pred_proba1 = cached_svc1.predict_proba(X)
 
         cached_svc2 = create_cached_model(Model, **kwargs)
         start_time = datetime.datetime.now()
@@ -59,6 +57,7 @@ class TestCachedModel(unittest.TestCase):
 
         self.assertTrue((y_pred == cached_y_pred1).all())
         self.assertTrue((y_pred == cached_y_pred2).all())
+        self.assertTrue((y_pred_proba == cached_y_pred_proba1).all())
 
 #    def test_copy(self):
 #        svc1 = SVC(C=10)
