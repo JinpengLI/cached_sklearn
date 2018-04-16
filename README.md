@@ -1,11 +1,11 @@
 cached_sklearn
 ==============
 
-It is the same idea with [joblib memory](https://pythonhosted.org/joblib/memory.html)
+It is the same idea with [joblib memory](https://pythonhosted.org/joblib/memory.html), but cached_sklearn is specified for the sklearn estimators.
 . When we tune the parameters of estimators, 
 you will probably run serverals times of estimators with same parameters. 
 However, each `fit` will takes a lot of time. This package can save computing
-time when serveral `fit`s and `predict`s with same parameters are called.
+time when several `fit`s and `predict`s with same parameters are called.
 
 Here is an example:
 
@@ -35,20 +35,20 @@ print("fit using %d seconds." % delta_time.seconds) ## roughly more than 1 secon
 y_pred_proba = clf.predict_proba(X)
 y_pred = clf.predict(X)
 
-cached_svc1 = create_cached_model(Model, **kwargs)
+cached_clf1 = create_cached_model(Model, **kwargs)
 start_time = datetime.datetime.now()
-cached_svc1.fit(X, y)
+cached_clf1.fit(X, y)
 delta_time = datetime.datetime.now() - start_time
 print("fit using %d seconds." % delta_time.seconds) ## roughly more than 1 seconds
-cached_y_pred1 = cached_svc1.predict(X)
-cached_y_pred_proba1 = cached_svc1.predict_proba(X)
+cached_y_pred1 = cached_clf1.predict(X)
+cached_y_pred_proba1 = cached_clf1.predict_proba(X)
 
-cached_svc2 = create_cached_model(Model, **kwargs)
+cached_clf2 = create_cached_model(Model, **kwargs)
 start_time = datetime.datetime.now()
-cached_svc2.fit(X, y)
+cached_clf2.fit(X, y)
 delta_time = datetime.datetime.now() - start_time
 print("fit using %d seconds." % delta_time.seconds) ## less than 1 seconds
-cached_y_pred2 = cached_svc2.predict(X)
+cached_y_pred2 = cached_clf2.predict(X)
 
 print((y_pred == cached_y_pred1).all())
 print((y_pred == cached_y_pred2).all())
