@@ -3,8 +3,8 @@ cached_sklearn
 
 It is the same idea with [joblib memory](https://pythonhosted.org/joblib/memory.html), but cached_sklearn is specified for the sklearn estimators. When we tune the parameters of estimators, 
 you will probably run serverals times of estimators with same parameters. 
-However, each `fit` will takes a lot of time. This package can save computing
-time when several `fit`s and `predict`s with same parameters are called.
+However, each `fit` will take a lot of time. This package can save computing
+time when several `fit`s and `predict`s (same parameters) are called.
 
 Here is an example:
 
